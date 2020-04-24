@@ -111,7 +111,8 @@ resource "aws_instance" "app_instance" {
       Name = "Terraform-Eng54-Victor-App"
     }
     key_name = "victor-eng54"
-  }
+
+}
 
 
 
