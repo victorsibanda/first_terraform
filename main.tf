@@ -4,7 +4,7 @@ provider "aws" {
 }
 
 # Create VPS
-# resource "aws_vpc" "App_VPC" {
+# resource "aws_vpc" "App_VPC"
 #   cidr_block = "10.0.0.0/16"
 #
 #
@@ -13,6 +13,17 @@ provider "aws" {
 #   }
 # }
 
+
+resource "aws_subnet" "app_subnet" {
+  vpc_id     = "vpc-07e47e9d90d2076da"
+  cidr_block = "172.31.83.0/24"
+  availability_zone = "eu-west-1a"
+  tags = {
+    Name = "Victor_app_subnet"
+  }
+}
+
+
 # Launching and Instance
 # ami-054778af2ffd719dd
 
@@ -20,11 +31,15 @@ resource "aws_instance" "app_instance" {
     ami = "ami-040bb941f8d94b312"
     instance_type = "t2.micro"
     associate_public_ip_address = true
+    subnet_id = aws_subnet.app_subnet.id
     tags = {
       Name = "Eng54-Victor-App"
     }
   }
 
+# Route Table
+# NACL
+# Security Group
 
 # Create Internet Gateway
 
