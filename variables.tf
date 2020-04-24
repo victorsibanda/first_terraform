@@ -5,5 +5,5 @@ variable "name" {
        default = "Victor_Eng54_App"
 }
 variable "ami_id" {
-       default = "ami-0ffd66eae1b53e2fe"
+       default = "ami-0a76b17e24bb7920a"
 }
