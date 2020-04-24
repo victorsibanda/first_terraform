@@ -23,8 +23,8 @@ resource "aws_subnet" "app_subnet" {
   }
 }
 
-resource "aws_security_group" "Victor_App_SG" {
-  name        = "app-sg-victor-name"
+resource "aws_security_group" "App_SG" {
+  name        = "App-SG"
   description = "Allows for traffic on Port 80"
   vpc_id      = "vpc-07e47e9d90d2076da"
 
@@ -44,7 +44,7 @@ resource "aws_security_group" "Victor_App_SG" {
   }
 
   tags = {
-    Name = "Victor_App_SG"
+    Name = "App_SG"
   }
 }
 
@@ -57,9 +57,9 @@ resource "aws_instance" "app_instance" {
     instance_type = "t2.micro"
     associate_public_ip_address = true
     subnet_id = aws_subnet.app_subnet.id
-    security_groups = [aws_security_group.Victor_App_SG.id]
+    security_groups = [aws_security_group.App_SG.id]
     tags = {
-      Name = "Eng54-Victor-App"
+      Name = "Terraform-Eng54-Victor-App"
     }
   }
 
