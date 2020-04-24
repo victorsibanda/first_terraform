@@ -23,6 +23,31 @@ resource "aws_subnet" "app_subnet" {
   }
 }
 
+resource "aws_security_group" "app-sg" {
+  name        = "app-sg-victor-name"
+  description = "Allows for traffic on Port 80"
+  vpc_id      = "vpc-07e47e9d90d2076da"
+
+  ingress {
+    description = "Port 80 from anywhere"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "allow_tls"
+  }
+}
+
 
 # Launching and Instance
 # ami-054778af2ffd719dd
