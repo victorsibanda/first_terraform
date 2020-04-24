@@ -23,6 +23,37 @@ resource "aws_subnet" "app_subnet" {
   }
 }
 
+data "aws_internet_gateway" "default-gw" {
+
+  filter {
+    name = "attachment.vpc-id"
+    values = [var.vpc_id]
+
+  }
+
+}
+
+# Route Table
+resource "aws_route_table" "public" {
+
+vpc_id = var.vpc_id
+
+route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = data.aws_internet_gateway.default-gw.id
+  }
+  tags = {
+    Name = "Route-Table-VS-public"
+  }
+}
+
+resource "aws_route_table_association" "main" {
+  subnet_id      = aws_subnet.app_subnet.id
+  route_table_id = aws_route_table.public.id
+}
+
+
+
 resource "aws_security_group" "App_SG" {
   name        = "App-SG"
   description = "Allows for traffic on Port 80"
@@ -64,7 +95,11 @@ resource "aws_instance" "app_instance" {
     }
   }
 
-# Route Table
+
+
+
+
+
 # NACL
 # Security Group
 
