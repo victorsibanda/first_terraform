@@ -15,7 +15,7 @@ provider "aws" {
 
 
 resource "aws_subnet" "app_subnet" {
-  vpc_id     = "vpc-07e47e9d90d2076da"
+  vpc_id     = var.vpc_id
   cidr_block = "172.31.83.0/24"
   availability_zone = "eu-west-1a"
   tags = {
@@ -26,7 +26,7 @@ resource "aws_subnet" "app_subnet" {
 resource "aws_security_group" "App_SG" {
   name        = "App-SG"
   description = "Allows for traffic on Port 80"
-  vpc_id      = "vpc-07e47e9d90d2076da"
+  vpc_id      = var.vpc_id
 
   ingress {
     description = "Port 80 from anywhere"
@@ -51,9 +51,10 @@ resource "aws_security_group" "App_SG" {
 
 # Launching and Instance
 # ami-054778af2ffd719dd
+# James ami = "ami-040bb941f8d94b312"
 
 resource "aws_instance" "app_instance" {
-    ami = "ami-040bb941f8d94b312"
+    ami = var.ami_id
     instance_type = "t2.micro"
     associate_public_ip_address = true
     subnet_id = aws_subnet.app_subnet.id
