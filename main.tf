@@ -67,6 +67,22 @@ resource "aws_security_group" "App_SG" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  ingress {
+    description = "Port 3000 from anywhere"
+    from_port   = 3000
+    to_port     = 3000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  ingress {
+    description = "Port 22 from anywhere"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["148.252.133.193/32"]
+  }
+
+
   egress {
     from_port   = 0
     to_port     = 0
@@ -89,10 +105,12 @@ resource "aws_instance" "app_instance" {
     instance_type = "t2.micro"
     associate_public_ip_address = true
     subnet_id = aws_subnet.app_subnet.id
+
     security_groups = [aws_security_group.App_SG.id]
     tags = {
       Name = "Terraform-Eng54-Victor-App"
     }
+    key_name = "victor-eng54"
   }
 
 
