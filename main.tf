@@ -111,9 +111,14 @@ resource "aws_instance" "app_instance" {
       Name = "Terraform-Eng54-Victor-App"
     }
     key_name = "victor-eng54"
+    user_data = data.template_file.app_init.rendered
 
 }
 
+
+data "template_file" "app_init" {
+  template = "${file("./templates/script.sh.tpl")}"
+}
 
 
 
