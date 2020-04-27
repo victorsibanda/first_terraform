@@ -38,13 +38,13 @@ module "app" {
   # igtw = data.aws_internet_gateway.default-gw.id
 }
 
-# module "db" {
-#   source = "./modules/db_tier"
-#   vpc_id = aws_vpc.app_vpc.id
-#   name = var.name
-#   igw = aws_internet_gateway.igw.id
-#
-# }
+module "db" {
+  source = "./modules/db_tier"
+  vpc_id = aws_vpc.app_vpc.id
+  name = var.name
+  db_ami_id = var.db_ami_id
+
+}
 
 
 
