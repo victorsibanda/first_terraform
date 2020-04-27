@@ -14,11 +14,11 @@ resource "aws_vpc" "app_vpc" {
 
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.app_vpc.id
-}
+
   tags = {
     Name = "${var.name}-ig"
   }
-
+}
 # data "aws_internet_gateway" "default-gw" {
 #
 #   filter {
@@ -26,12 +26,12 @@ resource "aws_internet_gateway" "igw" {
 #     values = [var.vpc_id]
 #
 #   }
-
-}
+#
+# }
 
 module "app" {
   source = "./modules/app_tier"
-  vpc_id = var.vpc_id
+  vpc_id = aws_vpc.app_vpc.id
   ami_id = var.ami_id
   name = var.name
   igw = aws_internet_gateway.igw.id

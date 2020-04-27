@@ -1,13 +1,79 @@
 
 resource "aws_subnet" "app_subnet" {
   vpc_id     = var.vpc_id
-  cidr_block = "172.31.87.0/24"
+  cidr_block = "10.0.1.0/24"
   availability_zone = "eu-west-1a"
   tags = {
     Name = "${var.name}-subnet"
   }
 }
 
+#network_acl_id
+resource "aws_network_acl" "public_nacl" {
+  vpc_id = var.vpc_id
+
+  egress {
+    protocol   = "tcp"
+    rule_no    = 100
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 0
+    to_port    = 0
+  }
+
+  ingress {
+    protocol   = "tcp"
+    rule_no    = 100
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 80
+    to_port    = 80
+  }
+  ingress {
+    protocol   = "tcp"
+    rule_no    = 110
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 443
+    to_port    = 443
+  }
+  ingress {
+    protocol   = "tcp"
+    rule_no    = 120
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 3000
+    to_port    = 3000
+  }
+  ingress {
+    protocol   = "tcp"
+    rule_no    = 130
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 1024
+    to_port    = 65535
+  }
+  ingress {
+    protocol   = "tcp"
+    rule_no    = 140
+    action     = "allow"
+    cidr_block = "85.255.234.241/32"
+    from_port  = 22
+    to_port    = 22
+  }
+  ingress {
+    protocol   = "tcp"
+    rule_no    = 150
+    action     = "allow"
+    cidr_block = "10.0.2.0/24"
+    from_port  = 27107
+    to_port    = 27107
+  }
+
+  tags = {
+    Name = "${var.name}-public-NACL"
+  }
+}
 
 # Route Table
 resource "aws_route_table" "public" {
