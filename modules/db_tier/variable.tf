@@ -4,7 +4,7 @@ variable "vpc_id" {
 variable "name" {
        description = "App Name"
 }
-variable "app_ami_id" {
+variable "db_ami_id" {
        description = "AMI ID"
 }
 variable "igw" {
