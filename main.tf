@@ -111,30 +111,31 @@ resource "aws_instance" "app_instance" {
       Name = "Terraform-Eng54-Victor-App"
     }
     key_name = "victor-eng54"
-    # user_data = data.template_file.app_init.rendered
+    user_data = data.template_file.app_init.rendered
 
-    provisioner "remote-exec" {
-    inline = [
-      "cd /home/ubuntu/app",
-      "sudo chown -R 1000:1000 '/home/ubuntu/.npm'",
-      "nodejs seeds/seed.js",
-      "npm start"
-    ]
-  }
-  connection {
-    type     = "ssh"
-    user     = "ubuntu"
-    host = self.public_ip
-    private_key = "${file("~/.ssh/victor-eng54.pem")}"
-  }
+  #   provisioner "remote-exec" {
+  #   inline = [
+  #     "cd /home/ubuntu/app",
+  #     "sudo chown -R 1000:1000 '/home/ubuntu/.npm'",
+  #     "nodejs seeds/seed.js",
+  #     "npm start &",
+  #     "exit"
+  #   ]
+  # }
+  # connection {
+  #   type     = "ssh"
+  #   user     = "ubuntu"
+  #   host = self.public_ip
+  #   private_key = "${file("~/.ssh/victor-eng54.pem")}"
+  # }
 
 
 }
 
 
-# data "template_file" "app_init" {
-#   template = "${file("./templates/script.sh.tpl")}"
-# }
+data "template_file" "app_init" {
+  template = "${file("./scripts/app/app_init.sh.tpl")}"
+}
 
 
 
