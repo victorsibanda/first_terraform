@@ -7,6 +7,6 @@ variable "name" {
 variable "ami_id" {
        description = "AMI ID"
 }
-variable "igtw" {
+variable "igw" {
   description = "Gateway ID Variable"
 }
