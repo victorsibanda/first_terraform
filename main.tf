@@ -100,6 +100,10 @@ resource "aws_security_group" "App_SG" {
 # ami-054778af2ffd719dd
 # James ami = "ami-040bb941f8d94b312"
 
+data "template_file" "app_init" {
+  template = "${file("./scripts/app/app_init.sh.tpl")}"
+}
+
 resource "aws_instance" "app_instance" {
     ami = var.ami_id
     instance_type = "t2.micro"
@@ -133,9 +137,7 @@ resource "aws_instance" "app_instance" {
 }
 
 
-data "template_file" "app_init" {
-  template = "${file("./scripts/app/app_init.sh.tpl")}"
-}
+
 
 
 
