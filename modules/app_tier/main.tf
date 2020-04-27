@@ -4,7 +4,7 @@ resource "aws_subnet" "app_subnet" {
   cidr_block = "172.31.87.0/24"
   availability_zone = "eu-west-1a"
   tags = {
-    Name = "Victor_App_subnet"
+    Name = "${var.name}-subnet"
   }
 }
 
@@ -19,7 +19,7 @@ route {
     gateway_id = var.igtw
   }
   tags = {
-    Name = "Route-Table-VS-public"
+    Name = "Route-Table-${var.name}-public"
   }
 }
 
@@ -67,7 +67,7 @@ resource "aws_security_group" "App_SG" {
   }
 
   tags = {
-    Name = "App_SG"
+    Name = "${var.name}-SG"
   }
 }
 
@@ -88,7 +88,7 @@ resource "aws_instance" "app_instance" {
 
     security_groups = [aws_security_group.App_SG.id]
     tags = {
-      Name = "Terraform-Eng54-Victor-App"
+      Name = "Terraform-${var.name}"
     }
     key_name = "victor-eng54"
     user_data = data.template_file.app_init.rendered
