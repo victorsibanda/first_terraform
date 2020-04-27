@@ -122,8 +122,8 @@ resource "aws_instance" "app_instance" {
   #     "cd /home/ubuntu/app",
   #     "sudo chown -R 1000:1000 '/home/ubuntu/.npm'",
   #     "nodejs seeds/seed.js",
-  #     "npm start &",
-  #     "exit"
+  #     "pm2 start app.js",
+  #     "echo 'done'"
   #   ]
   # }
   # connection {
