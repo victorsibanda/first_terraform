@@ -147,7 +147,7 @@ data "template_file" "app_init" {
 }
 
 resource "aws_instance" "app_instance" {
-    ami = var.app_ami_id
+    ami = var.ami_id
     instance_type = "t2.micro"
     associate_public_ip_address = true
     subnet_id = aws_subnet.app_subnet.id

@@ -75,56 +75,26 @@ resource "aws_network_acl" "private_nacl" {
   }
 }
 
-# Route Table
-resource "aws_route_table" "private" {
-
-vpc_id = var.vpc_id
-
-route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = var.igw
-  }
-  tags = {
-    Name = "Route-Table-${var.name}-private"
-  }
-}
-
-resource "aws_route_table_association" "main" {
-  subnet_id      = aws_subnet.app_subnet.id
-  route_table_id = aws_route_table.public.id
-}
-
-
-
 resource "aws_security_group" "db_SG" {
   name        = "App-SG"
   description = "Allows for traffic on Port 80"
   vpc_id      = var.vpc_id
 
   ingress {
-    description = "Port 80 from anywhere"
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    description = "Port 3000 from anywhere"
-    from_port   = 3000
-    to_port     = 3000
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  ingress {
-    description = "Port 22 from anywhere"
+    description = "Port 22 from public subnet"
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["185.69.144.246/32"]
+    cidr_blocks = ["10.0.2.0/24"]
   }
 
-
+  ingress {
+    description = "Port 27107 from public subnet"
+    from_port   = 27107
+    to_port     = 3000
+    protocol    = "tcp"
+    cidr_blocks = ["10.0.2.0/24"]
+  }
   egress {
     from_port   = 0
     to_port     = 0
@@ -133,24 +103,23 @@ resource "aws_security_group" "db_SG" {
   }
 
   tags = {
-    Name = "${var.name}-SG"
+    Name = "${var.name}-DB-SG"
   }
 }
 
-#Launching Instance
-
-resource "aws_instance" "db_instance" {
-    ami = var.db_ami_id
-    instance_type = "t2.micro"
-    associate_public_ip_address = true
-    subnet_id = aws_subnet.db_subnet.id
-
-    security_groups = [aws_security_group.db_SG.id]
-    tags = {
-      Name = "Terraform-${var.name}"
-    }
-    key_name = "victor-eng54"
-
-
-
-}
+# #Launching Instance
+#
+# resource "aws_instance" "db_instance" {
+#     ami = db_ami_id
+#     instance_type = "t2.micro"
+#     associate_public_ip_address = true
+#     subnet_id = aws_subnet.db_subnet.id
+#     security_groups = [aws_security_group.db_SG.id]
+#     tags = {
+#       Name = "Terraform-${var.name}"
+#     }
+#     key_name = "victor-eng54"
+#
+#
+#
+# }

@@ -32,21 +32,19 @@ resource "aws_internet_gateway" "igw" {
 module "app" {
   source = "./modules/app_tier"
   vpc_id = aws_vpc.app_vpc.id
-  ami_id = var.app_ami_id
+  ami_id = var.ami_id
   name = var.name
   igw = aws_internet_gateway.igw.id
   # igtw = data.aws_internet_gateway.default-gw.id
 }
 
-module "db" {
-  source = "./modules/db_tier"
-  vpc_id = aws_vpc.app_vpc.id
-  ami_id = var.db_ami_id
-  name = var.name
-  igw = aws_internet_gateway.igw.id
-  # igtw = data.aws_internet_gateway.default-gw.id
-}
-
+# module "db" {
+#   source = "./modules/db_tier"
+#   vpc_id = aws_vpc.app_vpc.id
+#   name = var.name
+#   igw = aws_internet_gateway.igw.id
+#
+# }
 
 
 

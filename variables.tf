@@ -4,7 +4,7 @@
 variable "name" {
        default = "Victor_Eng54_App"
 }
-variable "app_ami_id" {
+variable "ami_id" {
        default = "ami-01d4e961110114a91"
 }
 variable "db_ami_id" {
