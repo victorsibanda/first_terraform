@@ -11,11 +11,11 @@ variable "igw" {
   description = "Gateway ID Variable"
 }
 
-
-variable "pub_ip" {
-  description = "the generated ip"
-}
-
-variable "db_instance-ip" {
-  description = "the ip of the db instance"
-}
+# 
+# variable "pub_ip" {
+#   description = "the generated ip"
+# }
+#
+# variable "db_instance-ip" {
+#   description = "the ip of the db instance"
+# }
