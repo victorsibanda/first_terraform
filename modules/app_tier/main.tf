@@ -66,8 +66,8 @@ resource "aws_network_acl" "public_nacl" {
     rule_no    = 150
     action     = "allow"
     cidr_block = "10.0.2.0/24"
-    from_port  = 27107
-    to_port    = 27107
+    from_port  = 27017
+    to_port    = 27017
   }
 
   tags = {
@@ -139,11 +139,13 @@ resource "aws_security_group" "App_SG" {
 
 
 # Launching and Instance
-# ami-054778af2ffd719dd
-# James ami = "ami-040bb941f8d94b312"
+
 
 data "template_file" "app_init" {
   template = "${file("./scripts/app/app_init.sh.tpl")}"
+  vars = {
+    db-ip=var.db_instance-ip
+  }
 }
 
 resource "aws_instance" "app_instance" {

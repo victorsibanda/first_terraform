@@ -35,6 +35,8 @@ module "app" {
   ami_id = var.ami_id
   name = var.name
   igw = aws_internet_gateway.igw.id
+  pub_ip = module.db.pub_ip
+  db_instance-ip = module.db.db_instance-ip
   # igtw = data.aws_internet_gateway.default-gw.id
 }
 
@@ -43,6 +45,7 @@ module "db" {
   vpc_id = aws_vpc.app_vpc.id
   name = var.name
   db_ami_id = var.db_ami_id
+
 
 }
 

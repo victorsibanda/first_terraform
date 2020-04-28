@@ -106,7 +106,7 @@ resource "aws_security_group" "db_SG" {
 }
 
 # Launching Instance
-resource "aws_instance" "app_instance" {
+resource "aws_instance" "db_instance" {
      ami   = var.db_ami_id
     instance_type = "t2.micro"
     associate_public_ip_address = true
