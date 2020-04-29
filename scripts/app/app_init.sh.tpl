@@ -9,4 +9,4 @@ export DB_HOST=mongodb://${db_priv_ip}:27017/posts
 source /home/ubuntu/.bashrc
 source /home/ubuntu/.profile
 nodejs seeds/seed.js
-pm2 start app.js
+npm start app.js
