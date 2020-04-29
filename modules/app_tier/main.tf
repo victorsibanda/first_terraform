@@ -11,6 +11,7 @@ resource "aws_subnet" "app_subnet" {
 #network_acl_id
 resource "aws_network_acl" "public_nacl" {
   vpc_id = var.vpc_id
+  subnet_ids = [aws_subnet.app_subnet.id]
 
   egress {
     protocol   = "tcp"
@@ -57,7 +58,7 @@ resource "aws_network_acl" "public_nacl" {
     protocol   = "tcp"
     rule_no    = 140
     action     = "allow"
-    cidr_block = "85.255.234.241/32"
+    cidr_block = "85.255.236.170/32"
     from_port  = 22
     to_port    = 22
   }
@@ -121,7 +122,7 @@ resource "aws_security_group" "App_SG" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["185.69.144.246/32"]
+    cidr_blocks = ["85.255.236.170/32"]
   }
 
 
