@@ -125,6 +125,7 @@ resource "aws_security_group" "db_SG" {
 
 # Launching Instance
 
+
 data "template_file" "db_init" {
   template = "${file("./scripts/db/db_init.sh.tpl")}"
 }
@@ -141,6 +142,9 @@ resource "aws_instance" "db_instance" {
     key_name = "victor-eng54"
     user_data = data.template_file.db_init.rendered
 
+}
 
 
+output "db_private_ip" {
+  value = aws_instance.db_instance.private_ip
 }
