@@ -11,6 +11,7 @@ resource "aws_subnet" "db_subnet" {
 #network_acl_id
 resource "aws_network_acl" "db_private_nacl" {
   vpc_id = var.vpc_id
+  subnet_ids = [aws_subnet.db_subnet.id]
 
   egress {
     protocol   = "tcp"
@@ -20,6 +21,23 @@ resource "aws_network_acl" "db_private_nacl" {
     from_port  = 22
     to_port    = 22
   }
+  egress {
+    protocol   = "tcp"
+    rule_no    = 110
+    action     = "allow"
+    cidr_block = "10.0.1.0/24"
+    from_port  = 27017
+    to_port    = 27017
+  }
+  egress {
+    protocol   = "tcp"
+    rule_no    = 120
+    action     = "allow"
+    cidr_block = "10.0.1.0/24"
+    from_port  = 1024
+    to_port    = 65535
+  }
+
 
   ingress {
     protocol   = "tcp"
@@ -76,7 +94,7 @@ resource "aws_security_group" "db_SG" {
     from_port   = 1024
     to_port     = 65535
     protocol    = "tcp"
-    cidr_blocks = ["10.0.2.0/24"]
+    cidr_blocks = ["10.0.1.0/24"]
   }
 
   ingress {
@@ -84,14 +102,14 @@ resource "aws_security_group" "db_SG" {
     from_port   = 27017
     to_port     = 27017
     protocol    = "tcp"
-    cidr_blocks = ["10.0.2.0/24"]
+    cidr_blocks = ["10.0.1.0/24"]
   }
   ingress {
     description = "Port 27107 from public subnet"
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["10.0.2.0/24"]
+    cidr_blocks = ["10.0.1.0/24"]
   }
   egress {
     from_port   = 0
@@ -106,6 +124,14 @@ resource "aws_security_group" "db_SG" {
 }
 
 # Launching Instance
+output "db_private_ip" {
+  value = aws_instance.db_instance.private_ip
+}
+
+data "template_file" "db_init" {
+  template = "${file("./scripts/db/db_init.sh.tpl")}"
+}
+
 resource "aws_instance" "db_instance" {
      ami   = var.db_ami_id
     instance_type = "t2.micro"
@@ -116,6 +142,7 @@ resource "aws_instance" "db_instance" {
         Name = "${var.name}-DB"
     }
     key_name = "victor-eng54"
+    user_data = data.template_file.db_init.rendered
 
 
 

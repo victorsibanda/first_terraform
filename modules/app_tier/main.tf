@@ -143,6 +143,9 @@ resource "aws_security_group" "App_SG" {
 
 data "template_file" "app_init" {
   template = "${file("./scripts/app/app_init.sh.tpl")}"
+  vars = {
+      db_priv_ip = var.db_private_ip
+    }
 }
 
 resource "aws_instance" "app_instance" {
