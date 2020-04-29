@@ -81,3 +81,89 @@ provisioner "remote-exec" {
   }
 
 ```
+
+# 2-Tier Architecture
+
+When using terraform you can use it to make 2-tier architecture.  In this case I created an "App" and a "DB" using modules and I am launching 2 EC2's which comunicate with each other.
+
+## Modules
+
+The syntax used when creating Modules on the main.tf file is
+
+```
+
+module "app" {
+  source = "./modules/app_tier"
+  vpc_id = aws_vpc.app_vpc.id
+  ami_id = var.ami_id
+  name = var.name
+  igw = aws_internet_gateway.igw.id
+  # pub_ip = module.db.pub_ip
+  db_private_ip = module.db.db_private_ip
+}
+
+```
+
+The tree for a complete module is as below:
+
+```python
+$ tree complete-module/
+.
+├── README.md
+├── main.tf
+├── variables.tf
+├── outputs.tf
+├── ...
+├── modules/
+│   ├── nestedA/
+│   │   ├── README.md
+│   │   ├── variables.tf
+│   │   ├── main.tf
+│   │   ├── outputs.tf
+│   ├── nestedB/
+│   ├── .../
+├── examples/
+│   ├── exampleA/
+│   │   ├── main.tf
+│   ├── exampleB/
+│   ├── .../
+```
+
+## Injecting Environment variables
+
+To connect the database to the app I had to use Environment variables and took 3 steps to improve make it work
+
+#### Adding Outputs Line in db_tier/main.tf
+```
+output "db_private_ip" {
+  value = aws_instance.db_instance.private_ip
+}
+
+```
+#### Including the line within the script `scripts/app/app_init.sh.tpl` and adding it to the `app_tier/main.tf`
+```
+echo "export DB_HOST='mongodb://${db_priv_ip}:27017/posts'" >> /home/ubuntu/.bashrc
+echo "export DB_HOST='mongodb://${db_priv_ip}:27017/posts'" >> /home/ubuntu/.profile
+source /home/ubuntu/.bashrc
+source /home/ubuntu/.profile
+
+
+data "template_file" "app_init" {
+  template = "${file("./scripts/app/app_init.sh.tpl")}"
+  vars = {
+      db_priv_ip = var.db_private_ip
+    }
+}
+```
+#### Adding it to app_tier Variable and including it on main.tf
+```
+
+variable "db_private_ip" {
+  description = "the ip of the db instance"
+}
+
+// Main.tf// App Module
+
+db_private_ip = module.db.db_private_ip
+
+```

@@ -11,10 +11,10 @@ resource "aws_subnet" "app_subnet" {
 #network_acl_id
 resource "aws_network_acl" "public_nacl" {
   vpc_id = var.vpc_id
-  # subnet_ids = [aws_subnet.app_subnet.id]
+  subnet_ids = [aws_subnet.app_subnet.id]
 
   egress {
-    protocol   = "tcp"
+    protocol   = "-1"
     rule_no    = 100
     action     = "allow"
     cidr_block = "0.0.0.0/0"
